@@ -14,7 +14,6 @@ class ValidationMiddleware {
       const validation = schema.safeParse(
         target === "BODY" ? req.body : req.query
       );
-      console.log(validation.error?.formErrors);
       if (!validation.success) {
         next(
           AppError.new(
