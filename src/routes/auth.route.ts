@@ -12,30 +12,24 @@ import {
   refreshToken,
   logoutController,
 } from "../feature/auth/api/controller/auth.controller";
+import passport from "passport";
 
 const router = Router();
 
 router
-  .get("/get-user", authenticateJWT, (req, res) => {
-    getUserController(req, res);
-  })
+  .get("/get-user", authenticateJWT, getUserController)
   .post(
     "/login",
     validationMiddleware.validateRequestBody(loginCredentialSchema),
+    passport.authenticate('local', { session: false }),
     loginController
   )
   .post(
     "/register",
     validationMiddleware.validateRequestBody(RegisterCredentialSchema),
-    (req, res) => {
-      registerController(req, res);
-    }
+    registerController
   )
-  .post("/logout", (req, res) => {
-    logoutController(req, res);
-  })
-  .post("/refresh", (req, res) => {
-    refreshToken(req, res);
-  });
+  .post("/logout",  logoutController)
+  .post("/refresh", refreshToken);
 
 export default router;
