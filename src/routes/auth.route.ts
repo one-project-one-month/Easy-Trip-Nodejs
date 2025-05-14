@@ -11,6 +11,7 @@ import {
   loginController,
   refreshToken,
   logoutController,
+  googleOAuthController,
 } from "../feature/auth/api/controller/auth.controller";
 import passport from "passport";
 
@@ -21,7 +22,7 @@ router
   .post(
     "/login",
     validationMiddleware.validateRequestBody(loginCredentialSchema),
-    passport.authenticate('local', { session: false }),
+    passport.authenticate("local", { session: false }),
     loginController
   )
   .post(
@@ -29,7 +30,19 @@ router
     validationMiddleware.validateRequestBody(RegisterCredentialSchema),
     registerController
   )
-  .post("/logout",  logoutController)
-  .post("/refresh", refreshToken);
+  .post("/logout", logoutController)
+  .post("/refresh", refreshToken)
+  .get(
+    "/google",
+    passport.authenticate("google", { scope: ["profile", "email"] })
+  )
+  .get(
+    "/google/callback",
+    passport.authenticate("google", {
+      failureRedirect: "/login",
+      session: false,
+    }),
+    googleOAuthController
+  );
 
 export default router;

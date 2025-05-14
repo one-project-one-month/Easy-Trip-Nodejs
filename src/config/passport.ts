@@ -1,5 +1,6 @@
 import passport from "passport";
 import "../feature/auth/strategies/local-strategy";
+import "../feature/auth/strategies/google-strategy";
 
 passport.serializeUser((user, done) => {
   console.log("serializeUser", user);
@@ -7,7 +8,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((user, done) => {
-  console.log('deserializeUser', user);
+  console.log("deserializeUser", user);
   done(null, "ddd");
 });
 

@@ -7,9 +7,12 @@ import {
 import { AppError, errorKinds } from "../../../../utils/error-handling";
 import { StatusCode } from "../../../../utils/Status";
 import { IUser } from "../../models/user.model";
-import passport from "passport";
 
-export const registerController = async (req: Request, res: Response, next: NextFunction) => {
+export const registerController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { name, email, password } = req.body;
     const user = await registerUser(name, email, password);
@@ -39,7 +42,10 @@ export const loginController = (
   try {
     const user = req.user as IUser;
     if (!user) {
-      throw AppError.new(errorKinds.invalidCredential, "Invalid email or password");
+      throw AppError.new(
+        errorKinds.invalidCredential,
+        "Invalid email or password"
+      );
     }
 
     const { accessToken, refreshToken } = generateTokens(user);
@@ -62,10 +68,7 @@ export const loginController = (
     next(
       error instanceof AppError
         ? error
-        : AppError.new(
-          errorKinds.internalServerError,
-          "internal Server Error"
-        )
+        : AppError.new(errorKinds.internalServerError, "internal Server Error")
     );
   }
 };
@@ -84,10 +87,7 @@ export const logoutController = (
     next(
       error instanceof AppError
         ? error
-        : AppError.new(
-          errorKinds.internalServerError,
-          "internal Server Error"
-        )
+        : AppError.new(errorKinds.internalServerError, "internal Server Error")
     );
   }
 };
@@ -130,10 +130,48 @@ export const refreshToken = (
     next(
       error instanceof AppError
         ? error
+        : AppError.new(errorKinds.internalServerError, "internal Server Error")
+    );
+  }
+};
+
+export const googleOAuthController = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = req.user as IUser;
+
+    if (!user) {
+      throw AppError.new(errorKinds.invalidCredential, "Google login failed");
+    }
+
+    const { accessToken, refreshToken } = generateTokens(user);
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 7,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 7,
+    });
+
+    res.redirect("http://localhost:3001");
+  } catch (error) {
+    next(
+      error instanceof AppError
+        ? error
         : AppError.new(
-          errorKinds.internalServerError,
-          "internal Server Error"
-        )
+            errorKinds.internalServerError,
+            "Google OAuth callback error"
+          )
     );
   }
 };
