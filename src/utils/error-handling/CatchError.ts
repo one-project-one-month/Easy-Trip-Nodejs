@@ -5,7 +5,6 @@ export const catchErrorAsync = <T, E extends new (...args: any[]) => Error>(
   return promise
     .then((data) => [undefined, data] as [undefined, T])
     .catch((err) => { 
-      console.log(err)
       if (ErrorInstance === undefined) return [err];
       if (ErrorInstance.some((errorinstance) => err instanceof errorinstance))
         return [err];
@@ -21,7 +20,6 @@ export const catchError = <T, E extends new (...args: any[]) => Error>(
   try {
     return [undefined, fn()];
   } catch (err) {
-    console.log(err)
     if (ErrorInstance === undefined) return [err as Error];
     if (ErrorInstance.some((errorinstance) => err instanceof errorinstance)) return [err as Error];
     if (err instanceof Error) return [err];

@@ -22,7 +22,7 @@ export const errorKinds = {
   accessDenied: "accessDenied",
   unVerifyAccount: "unVerifyAccount",
   badRequest: "badRequest",
-  oauthAccoundAlreadyExist: "oauthAccoundAlreadyExist",
+  oauthAccountAlreadyExist: "oauthAccountAlreadyExist",
   mailboxUnavailable: "mailboxUnavailable",
 } as const;
 
@@ -94,7 +94,7 @@ export class AppError extends Error {
       case errorKinds.unVerifyAccount:
         this.statusCode = StatusCode.Forbidden;
         break;
-      case errorKinds.oauthAccoundAlreadyExist:
+      case errorKinds.oauthAccountAlreadyExist:
         this.statusCode = StatusCode.Conflict;
         break;
       case errorKinds.badRequest:
