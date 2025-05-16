@@ -32,17 +32,17 @@ router
   )
   .post("/logout", logoutController)
   .post("/refresh", refreshToken)
-  .get(
-    "/google",
-    passport.authenticate("google", { scope: ["profile", "email"] })
-  )
-  .get(
-    "/google/callback",
-    passport.authenticate("google", {
-      failureRedirect: "/login",
-      session: false,
-    }),
-    googleOAuthController
-  );
+  // .get(
+  //   "/google",
+  //   passport.authenticate("google", { scope: ["profile", "email"] })
+  // )
+  // .get(
+  //   "/google/callback",
+  //   passport.authenticate("google", {
+  //     failureRedirect: "/login",
+  //     session: false,
+  //   }),
+  //   googleOAuthController
+  // );
 
 export default router;
