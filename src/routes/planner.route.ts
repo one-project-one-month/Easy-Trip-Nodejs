@@ -6,7 +6,7 @@ import { thingUShouldKnowSchema } from "@/feature/planner/api/body/thingUShouldK
 const router = Router();
 
 router
-    .post(
+    .get(
         "/planner/thring-you-should-know",
         validationMiddleware.validateRequestBody(thingUShouldKnowSchema),
         thingUShouldKnowController
