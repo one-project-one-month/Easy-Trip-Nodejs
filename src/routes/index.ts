@@ -1,10 +1,9 @@
-import { RequestHandler, Router } from "express";
+import { Router } from "express";
 import { NextFunction, Response, Request } from "express";
-import { z } from 'zod'
 
 // routers import
 import { default as authRouter } from './auth.route'
-import validationMiddleware from "../middleware/validation.middleware";
+import { default as plannerRouter } from './planner.route'
 import { AppError, errorKinds } from "../utils/error-handling";
 
 const router = Router()
@@ -17,6 +16,7 @@ router.get(
 
 // register routes
 router.use('/auth', authRouter)
+router.use('/trip', plannerRouter)
 
 
 //404 handler

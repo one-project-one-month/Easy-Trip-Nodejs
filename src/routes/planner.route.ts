@@ -1,14 +1,15 @@
 import { Router } from "express";
-import { StatusCode } from "../utils/Status";
 import validationMiddleware from "../middleware/validation.middleware";
-import { RegisterCredentialSchema, loginCredentialSchema } from "../feature/auth/api/body";
+import { thingUShouldKnowController } from "@/feature/planner/api/controller";
+import { thingUShouldKnowSchema } from "@/feature/planner/api/body/thingUShouldKnowSchema";
 
 const router = Router();
 
-router.get("/thring-you-should-know", (req, res) => { res.sendStatus(StatusCode.OK) })
-    // .post('/login', validationMiddleware.validateRequestBody(loginCredentialSchema), (req, res) => { })
-    // .post('/register', validationMiddleware.validateRequestQuery(RegisterCredentialSchema), (req, res) => { })
-    // .post('/logout', (req, res) => { })
-    // .post('/refresh', (req, res) => { })
+router
+    .post(
+        "/planner/thring-you-should-know",
+        validationMiddleware.validateRequestBody(thingUShouldKnowSchema),
+        thingUShouldKnowController
+    )
 
 export default router;
