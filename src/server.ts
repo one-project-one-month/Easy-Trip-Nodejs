@@ -1,15 +1,21 @@
+import "./config/dotenv";
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./config/db";
 import router from "./routes";
 import ENV from "./config/custom-env";
+import passport from "passport";
+import "./config/passport";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = ENV.PORT;
 
 app.use(cors());
 app.use(express.json());
-app.use('/api', router);
+app.use(cookieParser());
+app.use(passport.initialize());
+app.use("/api", router);
 
 // Start server
 (async () => {
