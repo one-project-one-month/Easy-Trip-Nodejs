@@ -11,5 +11,6 @@ export class AuthUser {
         this.email = data.email;
         this.verify = data.verify;
         this.provider = data.provider;
+
     }
 }

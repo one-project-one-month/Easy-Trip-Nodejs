@@ -11,7 +11,13 @@ import cookieParser from "cookie-parser";
 const app = express();
 const port = ENV.PORT;
 
-app.use(cors());
+const corsConfig = {
+  origin: '*',
+  credentials: true,
+  // allowedHeaders: ['Content-Type', 'Authorization']
+}
+
+app.use(cors(corsConfig));
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
