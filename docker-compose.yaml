@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  api:
+    build: 
+     context: .
+     dockerfile: Dockerfile
+    image: easy_trip_api
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./.env
+    networks: 
+      - easy_trip_api
+
+networks:
+  easy_trip_api:
+    name: easy_trip_api
+  
+
