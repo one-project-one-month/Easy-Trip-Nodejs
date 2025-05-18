@@ -13,7 +13,7 @@ const refreshTokenPrivateKey = Buffer.from(
   "base64"
 ).toString("ascii");
 
-const accessTokenPublicKey = Buffer.from(
+export const accessTokenPublicKey = Buffer.from(
   ENV.ACCESS_TOKEN_PUBLIC_KEY!,
   "base64"
 ).toString("ascii");
@@ -25,7 +25,7 @@ const refreshTokenPublicKey = Buffer.from(
 export const signAccessToken = (user: IUser): string => {
   const options: SignOptions = {
     algorithm: "RS256",
-    expiresIn: 15 * 60 * 1000,
+    expiresIn: '15m',
   };
 
   return jwt.sign({ id: user._id.toString() }, accessTokenPrivateKey, options);
@@ -34,7 +34,7 @@ export const signAccessToken = (user: IUser): string => {
 export const signRefreshToken = (user: IUser): string => {
   const options: SignOptions = {
     algorithm: "RS256",
-    expiresIn: 7 * 24 * 60 * 1000,
+    expiresIn: '7d',
   };
 
   return jwt.sign({ id: user._id }, refreshTokenPrivateKey, options);

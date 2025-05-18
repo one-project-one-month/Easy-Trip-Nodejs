@@ -31,6 +31,26 @@ const UserSchema: Schema = new Schema(
         return this.provider === "google"; // Only required if provider is 'google'
       },
     },
+    refreshToken: {
+      type: String,
+      default: null,
+    },
+    lastLogin: {
+      type: Date,
+      default: Date.now,
+    },
+    lastLogout: {
+      type: Date,
+      default: Date.now,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    }
   },
   { timestamps: true }
 );

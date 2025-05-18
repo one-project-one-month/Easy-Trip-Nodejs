@@ -23,6 +23,8 @@ export const generateTokens = (user: IUser) => {
   return { accessToken, refreshToken };
 };
 
+export const generateAccessToken = (user: IUser) => signAccessToken(user);
+
 export const validateRefreshToken = (token: string): jwt.JwtPayload => {
   return verifyRefreshToken(token);
 };
