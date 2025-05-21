@@ -1,22 +1,27 @@
 import { RequestHandler, Router } from "express";
 import { NextFunction, Response, Request } from "express";
 import { z } from 'zod'
+import validationMiddleware from "../middleware/validation.middleware";
+import { AppError, errorKinds } from "../utils/error-handling";
+import { run } from "@/feature/destination/seeder";
 
 // routers import
 import { default as authRouter } from './auth.route'
-import validationMiddleware from "../middleware/validation.middleware";
-import { AppError, errorKinds } from "../utils/error-handling";
+import { default as destinationRouter } from './destination.route'
+
 
 const router = Router()
 router.get(
     "/healthCheck",
-    (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
+        await run();
         res.sendStatus(200).end();
     }
 );
 
 // register routes
 router.use('/auth', authRouter)
+router.use('/destinations', destinationRouter)
 
 
 //404 handler
