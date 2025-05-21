@@ -1,8 +1,7 @@
-import ENV from "@/config/custom-env";
 import passport from "passport";
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt'
 import User from "../../auth/models/user.model";
-import { accessTokenPublicKey } from "@/utils/jwt";
+import { accessTokenPublicKey } from "../../../utils/jwt";
 
 export default passport.use(
     'access-jwt',
