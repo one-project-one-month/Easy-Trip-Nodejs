@@ -17,5 +17,9 @@ router
         validationMiddleware.validateRequestQuery(getDescriptionSchema),
         destinationController.getDescription
     )
+    .get(
+        '/popular',
+        destinationController.getPopularDestination
+    )
    
 export default router;

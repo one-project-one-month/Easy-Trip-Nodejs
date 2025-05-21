@@ -28,6 +28,15 @@ class DestinationRepository {
             throw AppError.new(errorKinds.internalServerError, "internal Server Error");
         }
     }
+
+    async getPopularDestination({ limit, orderBy }: { limit: number, orderBy: 'asc' | 'desc' }) {
+        try {
+            const data = await destinationModel.find().sort({ score: orderBy }).limit(limit);
+            return data;
+        } catch (error) {
+            throw AppError.new(errorKinds.internalServerError, "internal Server Error");
+        }
+    }
 }
 
 export default DestinationRepository;

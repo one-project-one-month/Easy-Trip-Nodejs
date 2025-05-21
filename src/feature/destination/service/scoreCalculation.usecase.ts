@@ -11,7 +11,7 @@ const scoreMap = {
 type ScoreMap = typeof scoreMap;
 type Step = keyof ScoreMap;
 
-class ScoreCalculationService {
+class ScoreCalculationUseCase {
     private repository: DestinationRepository;
 
     private calculationRule = scoreMap;
@@ -33,4 +33,5 @@ class ScoreCalculationService {
     }
 }
 
-export default ScoreCalculationService;
+const scoreCalculationUseCase = new ScoreCalculationUseCase();
+export default scoreCalculationUseCase;
