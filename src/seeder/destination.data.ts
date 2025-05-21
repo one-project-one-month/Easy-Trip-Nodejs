@@ -1,4 +1,4 @@
-const data = [
+const destinaionSeedData = [
     { "destination_name": "Yangon", "destination": "yangon", "state_region": "Yangon Region", "country": "Myanmar", "score": 0 },
     { "destination_name": "Mandalay", "destination": "mandalay", "state_region": "Mandalay Region", "country": "Myanmar", "score": 0 },
     { "destination_name": "Naypyidaw", "destination": "naypyidaw", "state_region": "Naypyidaw Union Territory", "country": "Myanmar", "score": 0 },
@@ -53,4 +53,4 @@ const data = [
     { "destination_name": "Kalaw", "destination": "kalaw", "state_region": "Shan State", "country": "Myanmar", "score": 0 }
 ]
 
-export default data;
+export default destinaionSeedData;
