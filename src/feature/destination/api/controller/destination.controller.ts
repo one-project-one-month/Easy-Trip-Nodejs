@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AppError, errorKinds } from "@/utils/error-handling";
+import { AppError, errorKinds } from "../../../../utils/error-handling";
 import destinationUseCase from "../../service/destination.usecase";
 import scoreCalculationUseCase from "../../service/scoreCalculation.usecase";
 import { GetDescriptionRequest, GetDestinationRequest } from "../../type";

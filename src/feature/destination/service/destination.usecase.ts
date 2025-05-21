@@ -1,4 +1,4 @@
-import { AppError, catchErrorAsync, errorKinds } from "@/utils/error-handling";
+import { AppError, catchErrorAsync, errorKinds } from "../../../utils/error-handling";
 import DestinationRepository from "../repository/destination.repository";
 
 class DestinationUseCase {

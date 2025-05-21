@@ -1,4 +1,4 @@
-import { AppError, errorKinds } from "@/utils/error-handling";
+import { AppError, errorKinds } from "../../../utils/error-handling";
 import destinationModel from "../models/destination.model";
 
 class DestinationRepository {
