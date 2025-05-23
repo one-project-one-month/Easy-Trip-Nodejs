@@ -7,19 +7,16 @@ import getDescriptionSchema from "../feature/destination/api/body/getDescription
 const router = Router();
 
 router
-    .get(
-        "/",
-        validationMiddleware.validateRequestQuery(getDestinationSchema),
-        destinationController.getAll
-    )
-    .get(
-        "/description",
-        validationMiddleware.validateRequestQuery(getDescriptionSchema),
-        destinationController.getDescription
-    )
-    .get(
-        '/popular',
-        destinationController.getPopularDestination
-    )
-   
+	.get(
+		"/",
+		validationMiddleware.validateRequestQuery(getDestinationSchema),
+		destinationController.getAll
+	)
+	.get(
+		"/description",
+		validationMiddleware.validateRequestQuery(getDescriptionSchema),
+		destinationController.getDescription
+	)
+	.get("/popular", destinationController.getPopularDestination);
+
 export default router;
