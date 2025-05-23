@@ -2,8 +2,8 @@ import { axiosCient } from "@/config/api-config";
 import { TripPlanAiType } from "../type";
 import { AppError, errorKinds } from "@/utils/error-handling";
 
-class TripPlanAiGenerateService<T extends Partial<TripPlanAiType>>{
-    private tripAiPlan: T;
+class TripPlanAiGenerateService<P extends Partial<TripPlanAiType>>{
+    private tripAiPlan: P;
     private prompt: any;
     private apiBaseConfig = {
         method: 'post',
@@ -13,7 +13,7 @@ class TripPlanAiGenerateService<T extends Partial<TripPlanAiType>>{
         },
     };
 
-    private constructor(promptObj: T) {
+    private constructor(promptObj: P) {
         const {
             destination,
             startDate,

@@ -4,6 +4,7 @@ import { NextFunction, Response, Request } from "express";
 // routers import
 import { default as authRouter } from './auth.route'
 import { default as plannerRouter } from './planner.route'
+import { default as aiRouter } from './aiPlanner.route'
 import { AppError, errorKinds } from "../utils/error-handling";
 import TripPlanAiGenerateService from "@/feature/planner/service/tripPlanAiGenerate";
 
@@ -18,11 +19,8 @@ router.get(
 // register routes
 router.use('/auth', authRouter)
 router.use('/trip', plannerRouter)
+router.use('/aiTrip', aiRouter)
 
-router.get('/trip', (req: Request, res: Response, next: NextFunction) => {
-        const blahc = TripPlanAiGenerateService();
-        return res.status(200).json(blahc).end();
-})
 //404 handler
 router.use((req: Request, res: Response, next: NextFunction) => {
     // send 404 error
