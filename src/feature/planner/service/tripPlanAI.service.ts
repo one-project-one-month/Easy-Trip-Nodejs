@@ -1,19 +1,21 @@
 import { axiosCient } from "../../../config/api-config";
-import { ThingUShouldKnowType } from "../type";
+import { TripPlanAiType } from "../type";
 import { AppError, errorKinds } from "../../../utils/error-handling";
+import { parsePossiblyMalformedJsonString } from "../../../utils/ai-json-parse";
 
-class ThingUShouldKnowService<T extends Partial<ThingUShouldKnowType>>{
-    private thingUShouldKnow: T;
+class TripPlanAiGenerateService<P extends Partial<TripPlanAiType>>{
+    private tripAiPlan: P;
     private prompt: any;
     private apiBaseConfig = {
         method: 'post',
+        baseURL: "https://easy-trip-python-5.onrender.com/trip/invoke",
         maxBodyLength: Infinity,
         headers: {
             'Content-Type': 'application/json'
         },
     };
 
-    private constructor(promptObj: T) {
+    private constructor(promptObj: P) {
         const {
             destination,
             startDate,
@@ -29,12 +31,12 @@ class ThingUShouldKnowService<T extends Partial<ThingUShouldKnowType>>{
             }
         });
         this.prompt = prompt;
-        this.thingUShouldKnow = promptObj;
+        this.tripAiPlan = promptObj;
     }
 
 
-    static setPrompt(promptObj: ThingUShouldKnowType) {
-        return new ThingUShouldKnowService(promptObj);
+    static setPrompt(promptObj: TripPlanAiType) {
+        return new TripPlanAiGenerateService(promptObj);
     }
 
     async getGenerateData() {
@@ -49,16 +51,11 @@ class ThingUShouldKnowService<T extends Partial<ThingUShouldKnowType>>{
                 throw new Error('Invalid or missing content from AI response');
             }
 
-            const cleaned = rawString
-                .replace(/```json\n?/, '')
-                .replace(/```$/, '')
-                .trim();
-
-            return JSON.parse(cleaned);
+            return parsePossiblyMalformedJsonString(rawString);
         } catch (error) {
             throw AppError.new(errorKinds.internalServerError, "something went wrong while feting Ai Generate Data");
         }
     }
 }
 
-export default ThingUShouldKnowService;
+export default TripPlanAiGenerateService;

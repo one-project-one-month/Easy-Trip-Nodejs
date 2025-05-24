@@ -1,1 +1,1 @@
-export * from './planner.controller';
+export { default as PlannnerController } from './planner.controller';

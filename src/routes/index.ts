@@ -19,7 +19,6 @@ router.get(
 // register routes
 router.use('/auth', authRouter)
 router.use('/trip', plannerRouter)
-router.use('/aiTrip', aiRouter)
 router.use('/destinations', destinationRouter)
 
 
