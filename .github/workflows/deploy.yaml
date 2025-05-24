@@ -1,0 +1,32 @@
+name: Deploy to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Docker Login
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Pull Docker Image
+        run: docker pull zinmoeag/easy_trip_api:latest
+
+      - name: Stop and Remove Existing Container
+        run: |
+          docker stop easy_trip_api || true
+          docker rm easy_trip_api || true
+
+      - name: Create .env file from secret
+        run: echo "${{ secrets.EASY_TRIP_ENV }}" > .env
+
+      - name: Run New Container
+        run: |
+          docker run -d --name easy_trip_api -p 8005:4000 --env-file .env zinmoeag/easy_trip_api:latest

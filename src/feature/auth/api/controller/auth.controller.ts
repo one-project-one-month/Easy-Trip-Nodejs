@@ -3,10 +3,12 @@ import {
   registerUser,
   generateTokens,
   validateRefreshToken,
+  generateAccessToken,
 } from "../../service/auth.service";
 import { AppError, errorKinds } from "../../../../utils/error-handling";
 import { StatusCode } from "../../../../utils/Status";
-import { IUser } from "../../models/user.model";
+import userModel, { IUser } from "../../models/user.model";
+import { AuthUser } from "../dto";
 
 export const registerController = async (
   req: Request,
@@ -16,7 +18,7 @@ export const registerController = async (
   try {
     const { name, email, password } = req.body;
     const user = await registerUser(name, email, password);
-    res.status(StatusCode.Created).json({ message: "User registered", user });
+    res.status(StatusCode.Created).json({ message: "User registered" });
   } catch (error: any) {
     if (error.code === 11000) {
       throw AppError.new(
@@ -34,7 +36,7 @@ export const registerController = async (
   }
 };
 
-export const loginController = (
+export const loginController = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -49,21 +51,8 @@ export const loginController = (
     }
 
     const { accessToken, refreshToken } = generateTokens(user);
-
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 7,
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 7,
-    });
-    res.json({ message: "Login successful" });
+    await userModel.findByIdAndUpdate(user._id, { lastLogin: new Date(), refreshToken });
+    res.json({ accessToken, refreshToken });
   } catch (error) {
     next(
       error instanceof AppError
@@ -73,13 +62,14 @@ export const loginController = (
   }
 };
 
-export const logoutController = (
+export const logoutController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    res.clearCookie("accessToken");
+    const user = req.user as IUser;
+    await userModel.findByIdAndUpdate(user._id, { lastLogout: new Date(), refreshToken: null });
     res.status(StatusCode.OK).json({
       message: "User logged out successfully",
     });
@@ -103,11 +93,11 @@ export const getUserController = (
       "User not authenticated"
     ).response(res);
   }
-
-  res.json({ user: req.user });
+  const dto = new AuthUser(req.user);
+  res.json({ user: dto });
 };
 
-export const refreshToken = (
+export const refreshToken = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -115,17 +105,23 @@ export const refreshToken = (
   try {
     const { refreshToken } = req.body;
 
+    const user = await userModel.findOne({ refreshToken });
+    if(!user) {
+      throw AppError.new(errorKinds.invalidToken, "Refresh token is invalid");
+    }
+
     if (!refreshToken) {
       throw AppError.new(errorKinds.invalidToken, "Refresh token is missing");
     }
 
     const payload = validateRefreshToken(refreshToken);
-    const newTokens = generateTokens({ _id: payload.id } as IUser);
+    const accessToken = generateAccessToken({_id: payload.id} as IUser);
 
     res.status(StatusCode.OK).json({
       message: "New access token issued",
-      ...newTokens,
+      accessToken,
     });
+
   } catch (error: any) {
     next(
       error instanceof AppError
@@ -169,9 +165,9 @@ export const googleOAuthController = (
       error instanceof AppError
         ? error
         : AppError.new(
-            errorKinds.internalServerError,
-            "Google OAuth callback error"
-          )
+          errorKinds.internalServerError,
+          "Google OAuth callback error"
+        )
     );
   }
 };

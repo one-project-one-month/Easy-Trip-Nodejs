@@ -12,7 +12,13 @@ import bodyParser from "body-parser";
 const app = express();
 const port = ENV.PORT;
 
-app.use(cors());
+const corsConfig = {
+  origin: '*',
+  credentials: true,
+  // allowedHeaders: ['Content-Type', 'Authorization']
+}
+
+app.use(cors(corsConfig));
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.json());
