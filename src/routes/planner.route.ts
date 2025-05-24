@@ -1,7 +1,7 @@
 import { Router } from "express";
 import validationMiddleware from "../middleware/validation.middleware";
-import { generatePlanController, thingUShouldKnowController } from "@/feature/planner/api/controller";
-import { thingUShouldKnowSchema } from "@/feature/planner/api/body/thingUShouldKnowSchema";
+import { generatePlanController, thingUShouldKnowController } from "../feature/planner/api/controller";
+import { thingUShouldKnowSchema } from "../feature/planner/api/body/thingUShouldKnowSchema";
 
 const router = Router();
 

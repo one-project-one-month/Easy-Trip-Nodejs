@@ -1,6 +1,6 @@
-import { axiosCient } from "@/config/api-config";
+import { axiosCient } from "../../../config/api-config";
 import { ThingUShouldKnowType } from "../type";
-import { AppError, errorKinds } from "@/utils/error-handling";
+import { AppError, errorKinds } from "../../../utils/error-handling";
 
 class GeneratePlanService<T extends Partial<ThingUShouldKnowType>>{
     private thingUShouldKnow: T;

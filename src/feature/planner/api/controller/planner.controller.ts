@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 import { thingUShouldKnowSchema } from "../body/thingUShouldKnowSchema";
 import { GeneratePlanService, ThingUShouldKnowService, getPlaceData } from "../../service";
-import { StatusCode } from "@/utils/Status";
-import { AppError, errorKinds } from "@/utils/error-handling";
+import { StatusCode } from "../../../../utils/Status";
+import { AppError, errorKinds } from "../../../../utils/error-handling";
 
 export const thingUShouldKnowController = async (req: Request, res: Response, next: NextFunction) => {
     try {

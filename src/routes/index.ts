@@ -26,7 +26,7 @@ router.use('/destinations', destinationRouter)
 //404 handler
 router.use((req: Request, res: Response, next: NextFunction) => {
     // send 404 error
-    return next(AppError.new(errorKinds.notFound, "Not Found"));
+    return next(AppError.new(errorKinds.notFound, "Nost Found"));
 
 });
 
