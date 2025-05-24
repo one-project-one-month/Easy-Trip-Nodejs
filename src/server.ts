@@ -7,6 +7,7 @@ import ENV from "./config/custom-env";
 import passport from "passport";
 import "./config/passport";
 import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 
 const app = express();
 const port = ENV.PORT;
@@ -20,6 +21,7 @@ const corsConfig = {
 app.use(cors(corsConfig));
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use("/api", router);
 

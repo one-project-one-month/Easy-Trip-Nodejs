@@ -2,6 +2,17 @@ import { AppError, errorKinds } from "../../../utils/error-handling";
 import destinationModel from "../models/destination.model";
 
 class DestinationRepository {
+
+
+    async getById({ id }: { id: string }) {
+        try {
+            const data = await destinationModel.findById(id);
+            return data;
+        } catch(err) {
+            throw AppError.new(errorKinds.internalServerError, "internal Server Error");
+        } 
+    }
+
     async find({ search }: { search: string }) {
         try {
             const data = await destinationModel.find({

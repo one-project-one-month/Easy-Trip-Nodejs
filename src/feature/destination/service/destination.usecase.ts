@@ -12,6 +12,18 @@ class DestinationUseCase {
 		this.repository = new DestinationRepository();
 	}
 
+	async get(destionationId: string) {
+		const [err, data] = await catchErrorAsync(
+			this.repository.getById({ id: destionationId })
+		);
+		if (err)
+			throw AppError.new(
+				errorKinds.internalServerError,
+				"Error during retrieving data"
+			);
+		return data;
+	}
+
 	async getByFilter(search: string) {
 		const [err, retrieveData] = await catchErrorAsync(
 			this.repository.find({ search: search })
