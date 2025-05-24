@@ -3,6 +3,8 @@ import { AppError, errorKinds } from "../../../../utils/error-handling";
 import destinationUseCase from "../../service/destination.usecase";
 import scoreCalculationUseCase from "../../service/scoreCalculation.usecase";
 import { GetDescriptionRequest, GetDestinationRequest } from "../../type";
+import PlaceDataRetrievalService from "feature/place/service/placeDataRetrieval.service";
+import NominatimPlaceService from "feature/place/service/nominatimPlace.service";
 
 class DestinationController {
 	async getAll(req: Request, res: Response, next: NextFunction) {
@@ -31,8 +33,11 @@ class DestinationController {
 				destinationId: destination_id,
 				step: "step_2",
 			});
+			const placeRetriever = new PlaceDataRetrievalService(new NominatimPlaceService);
+			const dd = await placeRetriever.execute("yangon");
+			console.log(dd);
 			res.status(200).json({
-				content: data,
+				content: dd,
 			});
 		} catch (err) {
 			next(
