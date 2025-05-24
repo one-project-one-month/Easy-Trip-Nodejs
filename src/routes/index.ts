@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { default as authRouter } from './auth.route'
 import validationMiddleware from "../middleware/validation.middleware";
 import { AppError, errorKinds } from "../utils/error-handling";
+import { deleteFavPlan, favPlanController, getFavPlan, userRegister } from "../feature/auth/api/controller/favPlanController";
 
 const router = Router()
 router.get(
@@ -14,6 +15,11 @@ router.get(
         res.sendStatus(200).end();
     }
 );
+
+router.post('/register',userRegister)
+router.get('/getFavPlan',getFavPlan)
+router.delete('/deleteFavPlan/:id',deleteFavPlan)
+router.post('/favPlan',favPlanController)
 
 // register routes
 router.use('/auth', authRouter)
@@ -35,5 +41,7 @@ router.use((err: any, req: Request, res: Response, next: NextFunction) => {
         }).end();
     }
 });
+
+ 
 
 export default router;
