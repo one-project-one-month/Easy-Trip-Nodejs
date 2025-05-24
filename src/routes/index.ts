@@ -4,8 +4,9 @@ import { AppError, errorKinds } from "../utils/error-handling";
 
 // routers import
 import { default as authRouter } from './auth.route'
+import { default as plannerRouter } from './planner.route'
 import { default as destinationRouter } from './destination.route'
-
+import { default as aiRouter } from './aiPlanner.route'
 
 const router = Router()
 router.get(
@@ -17,13 +18,14 @@ router.get(
 
 // register routes
 router.use('/auth', authRouter)
+router.use('/trip', plannerRouter)
 router.use('/destinations', destinationRouter)
 
 
 //404 handler
 router.use((req: Request, res: Response, next: NextFunction) => {
     // send 404 error
-    return next(AppError.new(errorKinds.notFound, "Not Found"));
+    return next(AppError.new(errorKinds.notFound, "Nost Found"));
 
 });
 

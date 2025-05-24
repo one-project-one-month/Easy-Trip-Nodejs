@@ -191,3 +191,4 @@ $RECYCLE.BIN/
 .vercel
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,node,windows
+.vercel

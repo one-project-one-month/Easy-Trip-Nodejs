@@ -2,6 +2,7 @@ const ENV = {
   // appUrl : process.env.APP_URL,
   APP_NAME: process.env.APP_NAME,
   PORT: process.env.PORT || 3001,
+  AI_API_ENDPOINT: process.env.AI_API_ENDPOINT,
   MONGO_URI: process.env.MONGO_URI,
   // CLIENT_URL : "http://localhost:4000/",
   JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,

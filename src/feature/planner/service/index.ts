@@ -1,0 +1,1 @@
+export { default as ThingUShouldKnowService } from './thingUshouldKnowAI.service'
