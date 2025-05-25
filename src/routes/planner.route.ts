@@ -9,12 +9,12 @@ router
     .get(
         "/planner/thring-you-should-know",
         validationMiddleware.validateRequestBody(thingUShouldKnowSchema),
-        PlannnerController.generateThingUShouldKnow
+        PlannnerController.thingUShouldKnow
     )
     .get(
         "/planner/generate-trip-plans",
         validationMiddleware.validateRequestBody(thingUShouldKnowSchema),
-        PlannnerController.generatePlan
+        PlannnerController.tripPlan
     )
 
 export default router;
