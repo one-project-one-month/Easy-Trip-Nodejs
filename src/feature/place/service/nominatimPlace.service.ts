@@ -1,4 +1,4 @@
-import axiosClient from "config/axiosClient";
+import axiosClient from "../../../config/axiosClient";
 import { AppError, catchErrorAsync, errorKinds } from "../../../utils/error-handling";
 import { Place } from "../type";
 import { IPlaceDataRetriever } from "./placeDataRetrieval.service";

@@ -1,6 +1,7 @@
-import { axiosCient } from "../../../config/api-config";
+import { aiApiClient } from "../../../config/aiApiClient";
 import { parsePossiblyMalformedJsonString } from "../../../utils/ai-json-parse";
 import { AppError, errorKinds } from "../../../utils/error-handling";
+import ENV from "../../../config/custom-env";
 
 type ThingUShouldKnowType = {
     destination: string;
@@ -13,7 +14,7 @@ class ThingUShouldKnowService<T extends Partial<ThingUShouldKnowType>>{
     private thingUShouldKnow: T;
     private prompt: any;
     private apiBaseConfig = {
-        baseURL: 'https://latest-should-bring.onrender.com/things/invoke',
+        baseURL: ENV.THING_U_SHOULD_KNOW_AI_API_ENDPOINT,
         method: 'post',
         maxBodyLength: Infinity,
         headers: {
@@ -47,7 +48,7 @@ class ThingUShouldKnowService<T extends Partial<ThingUShouldKnowType>>{
 
     async getGenerateData() {
         try {
-            const response = await axiosCient.request({
+            const response = await aiApiClient.request({
                 ...this.apiBaseConfig,
                 data: this.prompt
             });

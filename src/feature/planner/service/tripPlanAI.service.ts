@@ -1,15 +1,16 @@
-import { axiosCient } from "../../../config/api-config";
+import { aiApiClient } from "../../../config/aiApiClient";
 import { TripPlanAiType, TripPlanReturnType } from "../type";
 import { AppError, catchError, errorKinds } from "../../../utils/error-handling";
 import { parsePossiblyMalformedJsonString } from "../../../utils/ai-json-parse";
 import { PlanDto } from "../api/dto";
+import ENV from "../../../config/custom-env";
 
 class TripPlanAiGenerateService<P extends Partial<TripPlanAiType>>{
     private tripAiPlan: P;
     private prompt: any;
     private apiBaseConfig = {
         method: 'post',
-        baseURL: "https://easy-trip-python-5.onrender.com/trip/invoke",
+        baseURL: ENV.TRIP_PLAN_AI_API_ENDPOINT,
         maxBodyLength: Infinity,
         headers: {
             'Content-Type': 'application/json'
@@ -43,7 +44,7 @@ class TripPlanAiGenerateService<P extends Partial<TripPlanAiType>>{
     async getGenerateData(): Promise<TripPlanReturnType> {
         try {
             // generate content from ai
-            const response = await axiosCient.request({
+            const response = await aiApiClient.request({
                 ...this.apiBaseConfig,
                 data: this.prompt
             });
