@@ -6,7 +6,6 @@ import { AppError, errorKinds } from "../utils/error-handling";
 import { default as authRouter } from './auth.route'
 import { default as plannerRouter } from './planner.route'
 import { default as destinationRouter } from './destination.route'
-import { default as aiRouter } from './aiPlanner.route'
 
 const router = Router()
 router.get(

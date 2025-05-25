@@ -1,7 +1,8 @@
 import { axiosCient } from "../../../config/api-config";
-import { TripPlanAiType } from "../type";
-import { AppError, errorKinds } from "../../../utils/error-handling";
+import { TripPlanAiType, TripPlanReturnType } from "../type";
+import { AppError, catchError, errorKinds } from "../../../utils/error-handling";
 import { parsePossiblyMalformedJsonString } from "../../../utils/ai-json-parse";
+import { PlanDto } from "../api/dto";
 
 class TripPlanAiGenerateService<P extends Partial<TripPlanAiType>>{
     private tripAiPlan: P;
@@ -39,21 +40,36 @@ class TripPlanAiGenerateService<P extends Partial<TripPlanAiType>>{
         return new TripPlanAiGenerateService(promptObj);
     }
 
-    async getGenerateData() {
+    async getGenerateData(): Promise<TripPlanReturnType> {
         try {
+            // generate content from ai
             const response = await axiosCient.request({
                 ...this.apiBaseConfig,
                 data: this.prompt
             });
-
             const rawString = response.data?.output?.content;
             if (!rawString || typeof rawString !== 'string') {
                 throw new Error('Invalid or missing content from AI response');
             }
 
-            return parsePossiblyMalformedJsonString(rawString);
+            // data transformation
+            const [parseErr, parseData] = catchError(() => parsePossiblyMalformedJsonString(rawString));
+            if (parseErr) throw parseErr
+            if (!parseData || typeof parseData !== 'object') {
+                throw new AppError(errorKinds.internalServerError, "something went wrong while feting Ai Generate Data");
+            }
+            const [dtoErr, returnPlanData] = catchError(() => new PlanDto(parseData));
+            if (dtoErr) throw dtoErr
+
+            return returnPlanData;
         } catch (error) {
-            throw AppError.new(errorKinds.internalServerError, "something went wrong while feting Ai Generate Data");
+            if (error instanceof Error) {
+                throw error;
+            } else {
+                throw AppError.new(
+                    errorKinds.internalServerError, "something went wrong while feting Ai Generate Data"
+                );
+            }
         }
     }
 }

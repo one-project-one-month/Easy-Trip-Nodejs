@@ -6,7 +6,6 @@ import { AppError, errorKinds } from "../../../../utils/error-handling";
 import tripPlanUseCase from '../../service/tripPlan.usecase';
 import thingUShouldKnowUseCase from "../../service/thingUshouldKnow.usecase";
 
-
 class PlannnerController {
     async generateThingUShouldKnow(req: Request, res: Response, next: NextFunction) {
         try {
@@ -25,12 +24,12 @@ class PlannnerController {
         }
     }
 
-    async generatePlan (req: Request, res: Response, next: NextFunction) {
+    async generatePlan (req: Request, res: Response, next: NextFunction){
         try {
             const body = req.body as z.infer<typeof thingUShouldKnowSchema>;
             const data = await tripPlanUseCase.generate(body);
             const response = {
-                generatedData: data
+                content: data
             }
             res.status(StatusCode.OK).json(response);
         } catch (error) {
