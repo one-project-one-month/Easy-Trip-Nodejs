@@ -4,6 +4,7 @@ const ENV = {
   PORT: process.env.PORT || 3001,
   AI_API_ENDPOINT: process.env.AI_API_ENDPOINT,
   MONGO_URI: process.env.MONGO_URI,
+  REDIS_URI: process.env.REDIS_URI,
   CORS_ALLOWED_URL1: process.env.CORS_ALLOWED_URL1,
   CORS_ALLOWED_URL2: process.env.CORS_ALLOWED_URL2,
   TRIP_PLAN_AI_API_ENDPOINT: process.env.TRIP_PLAN_AI_API_ENDPOINT,
