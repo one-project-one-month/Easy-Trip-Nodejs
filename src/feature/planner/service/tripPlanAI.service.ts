@@ -23,12 +23,13 @@ class TripPlanAiGenerateService<P extends Partial<TripPlanAiType>>{
             startDate,
             endDate,
             budget,
+            attendentsType
         } = promptObj;
 
         let prompt = JSON.stringify({
             "input": {
                 "input": `
-                Explain with description why we should bring in order to go to ${destination} with Family within ${startDate} to ${endDate} with ${budget} MMK
+                Explain with description why we should bring in order to go to ${destination} with ${attendentsType} within ${startDate} to ${endDate} with ${budget} MMK
                 `
             }
         });

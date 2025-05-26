@@ -6,12 +6,12 @@ import { PlannnerController } from "../feature/planner/api/controller";
 const router = Router();
 
 router
-    .get(
+    .post(
         "/planner/thring-you-should-know",
         validationMiddleware.validateRequestBody(thingUShouldKnowSchema),
         PlannnerController.thingUShouldKnow
     )
-    .get(
+    .post(
         "/planner/generate-trip-plans",
         validationMiddleware.validateRequestBody(thingUShouldKnowSchema),
         PlannnerController.tripPlan
