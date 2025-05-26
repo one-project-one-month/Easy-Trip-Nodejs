@@ -13,8 +13,9 @@ const app = express();
 const port = ENV.PORT;
 
 const corsConfig = {
-  origin: 'http://localhost:5173',
+  origin: [ENV.CORS_ALLOWED_URL1 as string, ENV.CORS_ALLOWED_URL2 as string],
   credentials: true,
+  // allowedHeaders: ['Content-Type', 'Authorization']
 }
 
 app.use(cors(corsConfig));
