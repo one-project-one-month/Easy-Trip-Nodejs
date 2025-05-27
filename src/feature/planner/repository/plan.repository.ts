@@ -1,5 +1,5 @@
 
-import { AppError, errorKinds } from "../../../utils/error-handling";
+import { AppError, catchErrorAsync, errorKinds } from "../../../utils/error-handling";
 import planModel from "../models/plan.model";
 
 class PlanRepository {
@@ -17,12 +17,33 @@ class PlanRepository {
         }
     }
 
-    async getPlanList({ user_id }: { user_id: string }) {
+    async getPlanList(params: { user_id: string, page?: number, limit?: number }) {
         try {
-            const planList = await planModel.find({
-                user_id
-            })
-            return planList;
+            const { user_id, page, limit } = params;
+            const pageNo = page || 1;
+            const pageSize = limit || 5;
+            const skip = (pageNo - 1) * pageSize;
+
+            const [retrieveError, retrieveData] = await catchErrorAsync(
+                Promise.all([
+                    planModel
+                        .find({ user_id })
+                        .skip(skip)
+                        .limit(pageSize),
+                    planModel
+                        .countDocuments({ user_id })
+                ])
+            );
+            if (retrieveError) throw retrieveError;
+            const [savedPlanList, totalCount] = retrieveData;
+            const metaData = {
+                total: totalCount,
+                page: pageNo,
+                limit: pageSize,
+                totalPages: Math.ceil(totalCount / pageSize),
+            };
+
+            return [savedPlanList, metaData];
         } catch (error) {
             throw AppError.new(
                 errorKinds.internalServerError,

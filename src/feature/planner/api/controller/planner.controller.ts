@@ -6,7 +6,7 @@ import { AppError, errorKinds } from "../../../../utils/error-handling";
 import tripPlanUseCase from '../../service/tripPlan.usecase';
 import thingUShouldKnowUseCase from "../../service/thingUshouldKnow.usecase";
 import { AuthUser } from "../../../../feature/auth";
-import { SavePlanType } from "../../../../feature/planner/type";
+import { GetSavedPlanType, SavePlanType } from "../../../../feature/planner/type";
 import savePlanUseCase from "../../../../feature/planner/service/savePlan.usecase";
 import getSavePlanUseCase from "../../../../feature/planner/service/getSavedPlan.usecase";
 import { savePlanSchema } from "../body/savePlan.schema";
@@ -97,14 +97,18 @@ class PlannnerController {
 
     async getSavedPlanList(req: Request, res: Response, next: NextFunction) {
         try {
+            const body = req.query as GetSavedPlanType;
             if (!req.user) throw new AppError(
                 errorKinds.notAuthorized, "User not authenticated"
             );
             const data = await getSavedPlanList.execute({
-                user: req.user as AuthUser
+                user: req.user as AuthUser,
+                page: Number(body?.page) ?? undefined,
+                limit: Number(body?.limit) ?? undefined
             })
             res.status(StatusCode.OK).json({ content: data });
         } catch (error) {
+            console
             next(
                 error instanceof AppError
                     ? error

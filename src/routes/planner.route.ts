@@ -1,7 +1,7 @@
 import { Router } from "express";
 import validationMiddleware from "../middleware/validation.middleware";
 import { thingUShouldKnowSchema } from "../feature/planner/api/body/thingUShouldKnowSchema";
-import { savePlanSchema } from '../feature/planner/api/body/savePlan.schema';
+import { savePlanSchema, getSavedPlanSchema } from '../feature/planner/api/body/savePlan.schema';
 import { PlannnerController } from "../feature/planner/api/controller";
 import plannerController from "../feature/planner/api/controller/planner.controller";
 
@@ -15,6 +15,7 @@ router
     )
     .get(
         '/planner/get-saved-plan-list',
+        validationMiddleware.validateRequestQuery(getSavedPlanSchema),
         plannerController.getSavedPlanList
     )
     .post(
