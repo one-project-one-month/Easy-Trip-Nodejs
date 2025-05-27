@@ -5,6 +5,12 @@ import { StatusCode } from "../../../../utils/Status";
 import { AppError, errorKinds } from "../../../../utils/error-handling";
 import tripPlanUseCase from '../../service/tripPlan.usecase';
 import thingUShouldKnowUseCase from "../../service/thingUshouldKnow.usecase";
+import { AuthUser } from "../../../../feature/auth";
+import { GetSavedPlanType, SavePlanType } from "../../../../feature/planner/type";
+import savePlanUseCase from "../../../../feature/planner/service/savePlan.usecase";
+import getSavePlanUseCase from "../../../../feature/planner/service/getSavedPlan.usecase";
+import { savePlanSchema } from "../body/savePlan.schema";
+import getSavedPlanList from "../../../../feature/planner/service/getSavedPlanList.usecase";
 
 class PlannnerController {
     async thingUShouldKnow(req: Request, res: Response, next: NextFunction) {
@@ -24,10 +30,14 @@ class PlannnerController {
         }
     }
 
-    async tripPlan (req: Request, res: Response, next: NextFunction){
+    async tripPlan(req: Request, res: Response, next: NextFunction) {
         try {
             const body = req.body as z.infer<typeof thingUShouldKnowSchema>;
-            const data = await tripPlanUseCase.generate(body);
+            if (!req.user) throw new AppError(errorKinds.notAuthorized, "User not authenticated");
+            const data = await tripPlanUseCase.generate({
+                ...body,
+                user: req.user as AuthUser
+            });
             const response = {
                 content: data
             }
@@ -37,6 +47,74 @@ class PlannnerController {
                 error instanceof AppError
                     ? error
                     : AppError.new(errorKinds.internalServerError, "internal Server Error")
+            );
+        }
+    }
+
+    async savePlan(req: Request, res: Response, next: NextFunction) {
+        try {
+            const body = req.body as SavePlanType;
+            if (!req.user) throw new AppError(
+                errorKinds.notAuthorized, "User not authenticated"
+            );
+            const data = await savePlanUseCase.execute({
+                ...body,
+                user: req.user as AuthUser
+            });
+            res.status(StatusCode.OK).json({ content: data });
+        } catch (error) {
+            next(
+                error instanceof AppError
+                    ? error
+                    : AppError.new(
+                        errorKinds.internalServerError, "internal Server Error"
+                    )
+            );
+        }
+    }
+
+    async getSavePlanDetail(req: Request, res: Response, next: NextFunction) {
+        try {
+            const params = req.query as z.infer<typeof savePlanSchema>;
+            if (!req.user) throw new AppError(
+                errorKinds.notAuthorized, "User not authenticated"
+            );
+            const data = await getSavePlanUseCase.execute({
+                plan_id: params.plan_id,
+                user: req.user as AuthUser
+            })
+            res.status(StatusCode.OK).json({ content: data });
+        } catch (error) {
+            next(
+                error instanceof AppError
+                    ? error
+                    : AppError.new(
+                        errorKinds.internalServerError, "internal Server Error"
+                    )
+            );
+        }
+    }
+
+    async getSavedPlanList(req: Request, res: Response, next: NextFunction) {
+        try {
+            const body = req.query as GetSavedPlanType;
+            if (!req.user) throw new AppError(
+                errorKinds.notAuthorized, "User not authenticated"
+            );
+            const data = await getSavedPlanList.execute({
+                user: req.user as AuthUser,
+                page: Number(body?.page) ?? undefined,
+                limit: Number(body?.limit) ?? undefined
+            })
+            res.status(StatusCode.OK).json({ content: data });
+        } catch (error) {
+            console
+            next(
+                error instanceof AppError
+                    ? error
+                    : AppError.new(
+                        errorKinds.internalServerError, "internal Server Error"
+                    )
             );
         }
     }
