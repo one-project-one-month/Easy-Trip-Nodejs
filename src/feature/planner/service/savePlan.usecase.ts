@@ -1,39 +1,39 @@
-import { z } from "zod";
-import { catchErrorAsync } from "../../../utils/error-handling";
-import DestinationRepository from "../../../feature/destination/repository/destination.repository";
-import { thingUShouldKnowSchema } from "../api/body/thingUShouldKnowSchema";
-import ThingUShouldKnowService from "./thingUshouldKnowAI.service";
+import PlanRepository from "../repository/plan.repository";
 import { SavePlanType } from "../type";
 import { redisClient } from "../../../config/redisClient";
 import { AuthUser } from "../../../feature/auth";
-import PlanModel from '../../planner/models/plan.model';
-import planModel from "../../planner/models/plan.model";
+import { AppError, catchErrorAsync, errorKinds } from "../../../utils/error-handling";
 
 class SavePlanUseCase {
-    private destinationRepo: DestinationRepository;
+    private planRepo: PlanRepository;
 
     constructor() {
-        this.destinationRepo = new DestinationRepository();
+        this.planRepo = new PlanRepository();
     }
 
-    async generate(params: SavePlanType & {user: AuthUser}) {
-        const { plan_id } = params;
-
-    
-        const planFromRedis = await redisClient.get("plan:generated:user:" + params.user?.id + "plan:" + plan_id);
+    async execute(params: SavePlanType & { user: AuthUser }) {
+        const { plan_id, user } = params;
+        const planFromRedis = await redisClient.get(
+            "plan:generated:user:" + params.user?.id + "plan:" + plan_id
+        );
         const creatData = {
             ...(JSON.parse(planFromRedis as string) as any),
             user_id: params.user?.id
         }
-        const savedData = await planModel.create(creatData);
-        console.log(savedData);
+        const [retrievingErr, existdata] = await catchErrorAsync(
+            this.planRepo.getById({ id: plan_id, user_id: user.id })
+        );
+        if (retrievingErr) throw retrievingErr;
+        if (existdata) throw AppError.new(
+            errorKinds.alreadyExist, "plan already saved"
+        );
+
+        const [savingErr, savedData] = await catchErrorAsync(
+            this.planRepo.create(creatData)
+        );
+        if (savingErr) throw savingErr;
         return savedData;
-        // console.log(planFromRedis);
-
-
-        // if (destinationErr) throw destinationErr;
     }
-
 }
 
 const savePlanUseCase = new SavePlanUseCase();

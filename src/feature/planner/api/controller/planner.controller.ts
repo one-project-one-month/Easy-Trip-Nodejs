@@ -8,6 +8,9 @@ import thingUShouldKnowUseCase from "../../service/thingUshouldKnow.usecase";
 import { AuthUser } from "../../../../feature/auth";
 import { SavePlanType } from "../../../../feature/planner/type";
 import savePlanUseCase from "../../../../feature/planner/service/savePlan.usecase";
+import getSavePlanUseCase from "../../../../feature/planner/service/getSavedPlan.usecase";
+import { savePlanSchema } from "../body/savePlan.schema";
+import getSavedPlanList from "../../../../feature/planner/service/getSavedPlanList.usecase";
 
 class PlannnerController {
     async thingUShouldKnow(req: Request, res: Response, next: NextFunction) {
@@ -51,24 +54,63 @@ class PlannnerController {
     async savePlan(req: Request, res: Response, next: NextFunction) {
         try {
             const body = req.body as SavePlanType;
-            if (!req.user) throw new AppError(errorKinds.notAuthorized, "User not authenticated");
-            const data = await savePlanUseCase.generate({
+            if (!req.user) throw new AppError(
+                errorKinds.notAuthorized, "User not authenticated"
+            );
+            const data = await savePlanUseCase.execute({
                 ...body,
                 user: req.user as AuthUser
             });
-            // const data = await tripPlanUseCase.savePlan({
-            //     ...body,
-            //     user: req.user as AuthUser
-            // });
-            // const response = {
-            //     content: data
-            // }
-            res.status(StatusCode.OK).json({ response: "success" });
+            res.status(StatusCode.OK).json({ content: data });
         } catch (error) {
             next(
                 error instanceof AppError
                     ? error
-                    : AppError.new(errorKinds.internalServerError, "internal Server Error")
+                    : AppError.new(
+                        errorKinds.internalServerError, "internal Server Error"
+                    )
+            );
+        }
+    }
+
+    async getSavePlanDetail(req: Request, res: Response, next: NextFunction) {
+        try {
+            const params = req.query as z.infer<typeof savePlanSchema>;
+            if (!req.user) throw new AppError(
+                errorKinds.notAuthorized, "User not authenticated"
+            );
+            const data = await getSavePlanUseCase.execute({
+                plan_id: params.plan_id,
+                user: req.user as AuthUser
+            })
+            res.status(StatusCode.OK).json({ content: data });
+        } catch (error) {
+            next(
+                error instanceof AppError
+                    ? error
+                    : AppError.new(
+                        errorKinds.internalServerError, "internal Server Error"
+                    )
+            );
+        }
+    }
+
+    async getSavedPlanList(req: Request, res: Response, next: NextFunction) {
+        try {
+            if (!req.user) throw new AppError(
+                errorKinds.notAuthorized, "User not authenticated"
+            );
+            const data = await getSavedPlanList.execute({
+                user: req.user as AuthUser
+            })
+            res.status(StatusCode.OK).json({ content: data });
+        } catch (error) {
+            next(
+                error instanceof AppError
+                    ? error
+                    : AppError.new(
+                        errorKinds.internalServerError, "internal Server Error"
+                    )
             );
         }
     }

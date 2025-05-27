@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { NextFunction, Response, Request } from "express";
 import { AppError, errorKinds } from "../utils/error-handling";
+import passport from "passport";
 
 // routers import
 import { default as authRouter } from './auth.route'
@@ -17,15 +18,17 @@ router.get(
 
 // register routes
 router.use('/auth', authRouter)
-router.use('/trip', plannerRouter)
 router.use('/destinations', destinationRouter)
-
+router.use(
+    '/trip',
+    passport.authenticate("access-jwt", { session: false }),
+    plannerRouter
+)
 
 //404 handler
 router.use((req: Request, res: Response, next: NextFunction) => {
     // send 404 error
     return next(AppError.new(errorKinds.notFound, "Nost Found"));
-
 });
 
 // error handling
