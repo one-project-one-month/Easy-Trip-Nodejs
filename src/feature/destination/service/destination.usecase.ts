@@ -1,8 +1,11 @@
+import { Document } from "mongoose";
 import {
 	AppError,
 	catchErrorAsync,
 	errorKinds,
 } from "../../../utils/error-handling";
+import { DescriptionSummaryDto } from "../api/dto/descriptionSummary.dto";
+import { DestinationDocument } from "../models/destination.model";
 import DestinationRepository from "../repository/destination.repository";
 
 class DestinationUseCase {
@@ -21,11 +24,15 @@ class DestinationUseCase {
 				errorKinds.internalServerError,
 				"Error during retrieving data"
 			);
+
 		return data;
+	}
+	transformToDto(data: (Document & DestinationDocument)[]) {
+		return data.map((item) => new DescriptionSummaryDto(item));
 	}
 
 	async getByFilter(search: string) {
-		const [err, retrieveData] = await catchErrorAsync(
+		const [err, data] = await catchErrorAsync(
 			this.repository.find({ search: search })
 		);
 		if (err)
@@ -33,8 +40,13 @@ class DestinationUseCase {
 				errorKinds.internalServerError,
 				"Error during retrieving data"
 			);
-
-		return retrieveData;
+		if (!data || data.length === 0) {
+			throw AppError.new(
+				errorKinds.internalServerError,
+				"Error during retrieving data"
+			);
+		}
+		return this.transformToDto(data);
 	}
 
 	async getPopularDestination(params: {
@@ -50,7 +62,13 @@ class DestinationUseCase {
 				errorKinds.internalServerError,
 				"Error during retrieving data"
 			);
-		return data;
+		if (!data || data.length === 0) {
+			throw AppError.new(
+				errorKinds.internalServerError,
+				"Error during retrieving data"
+			);
+		}
+		return this.transformToDto(data);
 	}
 
 	async getFromNominatim(query: string) {

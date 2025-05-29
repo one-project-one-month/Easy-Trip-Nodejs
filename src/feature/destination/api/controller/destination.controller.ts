@@ -19,9 +19,9 @@ class DestinationController {
 				err instanceof AppError
 					? err
 					: AppError.new(
-							errorKinds.internalServerError,
-							"Internal Server Error"
-					  )
+						errorKinds.internalServerError,
+						"Internal Server Error"
+					)
 			);
 		}
 	}
@@ -33,20 +33,20 @@ class DestinationController {
 				destinationId: destination_id,
 				step: "step_2",
 			});
-			const placeRetriever = new PlaceDataRetrievalService(new NominatimPlaceService);
-			const dd = await placeRetriever.execute("yangon");
-			console.log(dd);
+			const placeRetriever = new PlaceDataRetrievalService(
+				new NominatimPlaceService
+			);
 			res.status(200).json({
-				content: dd,
+				content: data,
 			});
 		} catch (err) {
 			next(
 				err instanceof AppError
 					? err
 					: AppError.new(
-							errorKinds.internalServerError,
-							"Internal Server Error"
-					  )
+						errorKinds.internalServerError,
+						"Internal Server Error"
+					)
 			);
 		}
 	}
@@ -69,9 +69,9 @@ class DestinationController {
 				err instanceof AppError
 					? err
 					: AppError.new(
-							errorKinds.internalServerError,
-							"Internal Server Error"
-					  )
+						errorKinds.internalServerError,
+						"Internal Server Error"
+					)
 			);
 		}
 	}
@@ -93,9 +93,9 @@ class DestinationController {
 				err instanceof AppError
 					? err
 					: AppError.new(
-							errorKinds.internalServerError,
-							"Internal Server Error"
-					  )
+						errorKinds.internalServerError,
+						"Internal Server Error"
+					)
 			);
 		}
 	}

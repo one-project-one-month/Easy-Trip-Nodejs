@@ -12,7 +12,7 @@ class DestinationSeeder extends SeederModal {
         this.model = destinationModel;
     }
     async execute() {
-        await connectDB(); 
+        await connectDB();
         await destinationModel.deleteMany(); // Optional
         await destinationModel.insertMany(destinaionSeedData); // Actual seeding
         process.exit(0);
