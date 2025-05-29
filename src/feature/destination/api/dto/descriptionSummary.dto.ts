@@ -1,21 +1,21 @@
 export class DescriptionSummaryDto {
     id: string;
-    destinationName: string;
+    destination_name: string;
     destination: string;
-    stateRegion: string;
+    state_region: string;
     country: string;
     score: number;
     description: string;
-    mainImage: string;
+    main_image: string;
 
     constructor(data: any) {
         this.id = data.id || data._id;
-        this.destinationName = data.destination_name;
+        this.destination_name = data.destination_name;
         this.destination = data.destination;
-        this.stateRegion = data.state_region;
+        this.state_region = data.state_region;
         this.country = data.country;
         this.score = data.score;
         this.description = data.description;
-        this.mainImage = data.main_image;
+        this.main_image = data.main_image;
     }
 }

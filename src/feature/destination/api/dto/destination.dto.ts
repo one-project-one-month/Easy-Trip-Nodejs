@@ -11,14 +11,14 @@ export class HighlightDto {
 }
 
 export class TravelInfoDto {
-    bestTimeToVisit: string| null;
-    avgDailyBudget: string | null;
+    best_time_to_visit: string | null;
+    avg_daily_budget: string | null;
     climate: string | null;
     transport: string | null;
 
     constructor(data: any) {
-        this.bestTimeToVisit = data?.bestTimeToVisit;
-        this.avgDailyBudget = data?.avgDailyBudget;
+        this.best_time_to_visit = data?.bestTimeToVisit;
+        this.avg_daily_budget = data?.avgDailyBudget;
         this.climate = data?.climate;
         this.transport = data?.transport;
     }
@@ -26,38 +26,38 @@ export class TravelInfoDto {
 
 export class LocationDto {
     lat: number | null;
-    lng: number | null ;
+    lng: number | null;
 
     constructor(data: any) {
-        this.lat = data?.lat || null;
-        this.lng = data?.lng || null;
+        this.lat = data?.lat ?? null;
+        this.lng = data?.lng ?? null;
     }
 }
 
 export class DestinationDto {
     id: string;
-    destinationName: string;
+    destination_name: string;
     destination: string;
-    stateRegion: string | null;
+    state_region: string | null;
     country: string | null;
     score: number;
     description: string;
-    mainImage: string | null;
+    main_image: string | null;
     highlights: HighlightDto[];
-    travelInfo: TravelInfoDto;
+    travel_info: TravelInfoDto;
     location?: LocationDto;
 
     constructor(data: any) {
         this.id = data.id || data._id;
-        this.destinationName = data.destination_name;
+        this.destination_name = data.destination_name;
         this.destination = data.destination;
-        this.stateRegion = data?.state_region || null;
-        this.country = data.country || null;
-        this.score = data.score;
-        this.description = data.description || null;
-        this.mainImage = data?.main_image;
+        this.state_region = data?.state_region || null;
+        this.country = data?.country || null;
+        this.score = data?.score;
+        this.description = data?.description || null;
+        this.main_image = data?.main_image || null;
         this.highlights = (data.highlights || []).map((h: any) => new HighlightDto(h));
-        this.travelInfo = new TravelInfoDto(data?.travel_info);
+        this.travel_info = new TravelInfoDto(data?.travel_info);
         this.location = new LocationDto(data?.location);
     }
 }
